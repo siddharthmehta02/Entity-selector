@@ -1,0 +1,44 @@
+p{
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.display{
+    
+    min-height: 40vh;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 5px;
+    display: flex;
+    
+}
+
+.message{
+    background-color: antiquewhite;
+    width: 50%;
+    /* margin-top: 20px; */
+    padding-top: 1px;
+    border:1px solid #00000020
+
+}
+
+.submit{
+    background-color: antiquewhite;
+    width: 20%;
+    border:1px solid #00000020
+
+}
+.json{
+    background-color: antiquewhite;
+    width: 30%;
+    padding-right: 10px;
+    border:1px solid #00000020
+
+}
+
+.deleteIcon{
+    margin-top: -10px;
+    margin-left: 10px;
+    cursor: pointer;
+}
