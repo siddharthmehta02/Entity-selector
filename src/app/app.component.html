@@ -1,5 +1,8 @@
 <div style="background-color: #edf2f4;min-height: 100vh;">
-  <h1 style="text-align: center;padding-top: 20px;">Entity Selector</h1>
+  <mat-toolbar color="primary">
+    <span>NER Dataset Maker</span>
+  </mat-toolbar>
+  <h1 style="text-align: center;padding-top: 20px;font-weight: 500;opacity: 0.6;"></h1>
   <div class="input" style="display: flex;flex-direction: column;align-items: center;">
     <mat-form-field style="width: 80%;" appearance="fill">
       <mat-label>Message</mat-label>
@@ -9,29 +12,37 @@
       <mat-icon>keyboard_arrow_right</mat-icon>
     </button>
   </div>
-  <div class="display">
-    <div  class="message">
+  <div class="display" >
+    <div  class="message" style="padding: 10px;">
     <p *ngFor="let word of myArr;let i = index" 
-        style="display: inline;font-size: 18px;" 
+        style="display: inline;font-size: 18px;margin-top: 5px;" 
         (click)="clicked(i)" 
         (contextmenu)="rightClick($event,i)"
-        [ngStyle]="{'background-color':selectedIndex.includes(i)?'rgba(0,255,0,0.6)':'transparent'}" >
+        [ngStyle]="{'background-color':selectedIndex.includes(i)?'rgba(37, 85, 190,0.6)':'transparent','padding':selectedIndex.includes(i)?'2px':'0'}" >
         {{word}} 
     </p>
     </div>
     <div class="submit" >
-      <input style="width: 100%;" disabled *ngIf="selectedIndex.length==0"  (keyup.enter)="submit()" [(ngModel)]="label">
-      <input style="width: 100%;" *ngIf="selectedIndex.length!=0"  (keyup.enter)="submit()" [(ngModel)]="label">
+      <input style="width: 85%;margin-left: 5%;margin-top: 5px;cursor:not-allowed;" disabled *ngIf="selectedIndex.length==0"  (keyup.enter)="submit()" [(ngModel)]="label">
+      <input style="width: 85%;margin-left: 5%;margin-top: 5px;" *ngIf="selectedIndex.length!=0"  (keyup.enter)="submit()" [(ngModel)]="label">
     </div>
 
     <div class="json">
       <ul>
-      <li style="margin-bottom: 0;display: flex;align-items: center;" *ngFor="let json of finalArray">
+      <li style="margin-bottom: 0;display: flex;align-items: center;" *ngFor="let json of entityArray">
         <p>{{json}}</p>
         <mat-icon class="deleteIcon" (click)="delete(json)" style="color: rgb(194, 34, 34);">highlight_remove</mat-icon>
       </li>
       </ul>
     </div>
+    
+  </div>
+  <div class="next">
+    <button (click)="convertToCsv()" mat-raised-button color="accent">Export</button>
+    <button style="margin-left: 20px;" (click)="next()" mat-raised-button color="accent">Store</button>
+  </div>
+  <div class="footer" style="position: absolute;bottom: 10px;left:50%">
+    <p style="position: relative; left: -50%;opacity: 0.4;">© siddharth mehta</p>
   </div>
 </div>
 

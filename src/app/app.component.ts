@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ExportToCsv } from 'export-to-csv';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,15 +11,15 @@ export class AppComponent {
   text:string=''
   label:string=''
   displaytext:string='s'
-  myArr: string[]=['aaaa','ssss','dddd'];
+  myArr: string[]=[];
   selectedIndex:number[]=[]
   selectedtext:string=''
-  finalDict:any={}
-  finalArray:any=[]
+  entityArray:any=[]
   nerDict:any={}
   firstIndex: number=-1;
   lastIndex: number =0;
-
+  finalArray:any[]=[]
+  constructor(private _snackBar: MatSnackBar) {}
   display(){
     console.log(this.text)
     this.displaytext=this.text
@@ -45,7 +46,6 @@ export class AppComponent {
         this.selectedtext+=' '+element
       }
     });
-    this.finalDict[this.label]=this.selectedtext
     this.myArr.forEach((element,index) => {
       if(this.selectedIndex.includes(index)){
         if(this.firstIndex==-1){this.lastIndex=0}
@@ -63,7 +63,7 @@ export class AppComponent {
     });
     this.firstIndex+=1
     this.lastIndex+=this.selectedIndex.length-1
-    this.finalArray.push(this.label+" : "+this.selectedtext+" ("+this.firstIndex+","+this.lastIndex+")")
+    this.entityArray.push(this.label+" :"+this.selectedtext+" - ("+this.firstIndex+","+this.lastIndex+")")
     this.firstIndex=-1
     this.lastIndex=0
     this.label=''
@@ -81,11 +81,59 @@ export class AppComponent {
 
   delete(json:any){
     console.log(json.split(' :'))
-    delete this.finalDict[json.split(' :')[0]]
-    const index = this.finalArray.indexOf(json);
+    const index = this.entityArray.indexOf(json);
     if (index > -1) { 
-      this.finalArray.splice(index, 1); 
+      this.entityArray.splice(index, 1); 
     }
+  }
+
+  next(){
+    var object:any[]=[]
+    var tempArray:any[]=[]
+    this.entityArray.forEach((entity: string) => {
+      tempArray=entity.split(" :")[1].split(" - ")
+      console.log(tempArray)
+      object.push(('('+tempArray[1].slice(1,tempArray[1].length-1)+",'"+entity.split(" :")[0]+"')"))
+    });
+    this.finalArray.push({'nerValue':"{'"+this.displaytext+'\','+JSON.stringify({'entries':object.toString()})+'}'})
+    this.openSnackBar()
+    this.clearVariables()
+  }
+
+  convertToCsv(){
+    const options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'NER Dataset @siddharthmehta02',
+      useTextFile: false,
+      useBom: true,
+      useKeysAsHeaders: true,
+    };
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(this.finalArray);
+  }
+
+  clearVariables(){
+    this.text=''
+    this.label=''
+    this.displaytext=''
+    this.myArr=[]
+    this.selectedIndex=[]
+    this.selectedtext=''
+    this.entityArray=[]
+    this.nerDict={}
+    this.firstIndex=-1
+    this.lastIndex=0
+
+  }
+
+  openSnackBar() {
+    this._snackBar.open("Stored!", "close", {
+      duration: 800
+    });
   }
   
 }
